@@ -1,6 +1,7 @@
 package com.example.implicitintents;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ShareCompat;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -16,6 +17,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText mLocationEditText;
 
+    private EditText mShareEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +29,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Asigna a la variable el valor del EditText de la localización
         mLocationEditText = findViewById(R.id.location_edittext);
+
+        // Asigna a la variable el EditText del Share
+        mShareEditText = findViewById(R.id.share_edittext);
     }
 
     public void openWebsite(View view) {
@@ -38,11 +44,9 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_VIEW, webpage);
 
         // Busca una actividad para entregar la intención y comenzar la actividad
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Log.d("ImplicitIntents", "¡No puedo con esto!");
-        }
+
+        startActivity(intent);
+
     }
 
     public void openLocation(View view) {
@@ -52,13 +56,19 @@ public class MainActivity extends AppCompatActivity {
         Uri addressUri = Uri.parse("geo:0,0?q=" + loc);
         Intent intent = new Intent(Intent.ACTION_VIEW, addressUri);
 
-        if (intent.resolveActivity(getPackageManager()) != null) {
-            startActivity(intent);
-        } else {
-            Log.d("ImplicitIntents", "¡No puedo con esto!");
-        }
+        startActivity(intent);
     }
 
     public void shareText(View view) {
+        String txt = mShareEditText.getText().toString();
+
+        String mimeType = "text/plain";
+
+        ShareCompat.IntentBuilder
+                .from(this)
+                .setType(mimeType)
+                .setChooserTitle("Comparte este texto con: ")
+                .setText(txt)
+                .startChooser();
     }
 }
