@@ -14,6 +14,8 @@ public class MainActivity extends AppCompatActivity {
 
     private EditText mWebsiteEditText;
 
+    private EditText mLocationEditText;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -21,9 +23,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Asignar a la variable el valor del EditText
         mWebsiteEditText = findViewById(R.id.website_edittext);
+
+        // Asigna a la variable el valor del EditText de la localización
+        mLocationEditText = findViewById(R.id.location_edittext);
     }
 
-    @SuppressLint("QueryPermissionsNeeded")
     public void openWebsite(View view) {
         String url = mWebsiteEditText.getText().toString();
 
@@ -42,6 +46,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void openLocation(View view) {
+        String loc = mLocationEditText.getText().toString();
+
+        // Analiza la cadena en un objeto Uri con una consulta de búsqueda geográfica
+        Uri addressUri = Uri.parse("geo:0,0?q=" + loc);
+        Intent intent = new Intent(Intent.ACTION_VIEW, addressUri);
+
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            startActivity(intent);
+        } else {
+            Log.d("ImplicitIntents", "¡No puedo con esto!");
+        }
     }
 
     public void shareText(View view) {
